@@ -4,7 +4,7 @@ module Vidibus
       extend ActiveSupport::Concern
 
       included do
-        field :tags_hash, :type => Hash, :default => {}
+        field :tags_hash, type: Hash, default: {}
         before_save :save_category_tags
       end
 

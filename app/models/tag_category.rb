@@ -5,12 +5,12 @@ class TagCategory
 
   field :label
   field :callname
-  field :context, :type => Array, :default => []
-  field :tags, :type => Array, :default => []
-  field :position, :type => Integer
+  field :context, type: Array, default: []
+  field :tags, type: Array, default: []
+  field :position, type: Integer
 
-  before_validation :set_callname, :if => :label
-  before_validation :cleanup_tags, :if => :tags
+  before_validation :set_callname, if: :label
+  before_validation :cleanup_tags, if: :tags
   before_create :set_position
 
   validates :label, :callname, :presence => true
@@ -38,13 +38,14 @@ class TagCategory
         raise('Array of uuids in order required')
       end
       uuids = order.map { |i| i[/([^\-]{32})$/, 1]}
+
       uuids.each_with_index do |uuid, index|
-        if item = where(:uuid => uuid).first
+        if item = where(uuid: uuid).first
           # item.set(:position, index) # TODO: does not work in reality?
           item.update_attribute(:position, index+1)
         end
       end
-      destroy_all(:conditions => {:uuid.nin => uuids})
+      destroy_all({:uuid.nin => uuids})
     end
   end
 

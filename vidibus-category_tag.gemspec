@@ -14,9 +14,9 @@ Gem::Specification.new do |s|
   s.description = s.summary
   s.license     = 'MIT'
 
-  s.add_dependency 'activesupport', '>= 3.0'
-  s.add_dependency 'mongoid', '>= 3'
-  s.add_dependency 'vidibus-uuid', '1.0.0'
+  s.add_dependency 'activesupport', '>= 5.0', "<6"
+  s.add_dependency 'mongoid', '>= 5', "<7"
+  s.add_dependency 'vidibus-uuid'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'

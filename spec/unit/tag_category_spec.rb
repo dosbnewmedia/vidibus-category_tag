@@ -69,29 +69,34 @@ describe TagCategory do
   end
 
   describe '.sort!' do
+    let(:first) { FactoryBot.create(:tag_category, context: ['realm:100', 'model:movie']) }
+    let(:second) { FactoryBot.create(:tag_category, context: ['realm:100', 'model:movie']) }
+    let(:third) { FactoryBot.create(:tag_category, context: ['realm:101', 'model:movie']) }
+    let(:fourth) { FactoryBot.create(:tag_category, context: ['realm:101', 'model:movie']) }
+
     before do
-      @first = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
-      @second = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
-      @third = FactoryBot.create(:tag_category, :context => ['realm:101', 'model:movie'])
-      @fourth = FactoryBot.create(:tag_category, :context => ['realm:101', 'model:movie'])
+      first.uuid
+      second.uuid
+      third.uuid
+      fourth.uuid
     end
 
     it 'should put items in order' do
-      order = [@third.uuid, @second.uuid, @first.uuid, @fourth.uuid]
+      order = [third.uuid, second.uuid, first.uuid, fourth.uuid]
       TagCategory.sort!(order)
-      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
+      expect(TagCategory.sorted.map(:uuid)).to eq(order)
     end
 
     it 'should remove items not in list' do
-      order = [@third.uuid, @first.uuid, @fourth.uuid]
+      order = [third.uuid, first.uuid, fourth.uuid]
       TagCategory.sort!(order)
-      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
+      expect(TagCategory.sorted.map(:uuid)).to eq(order)
     end
 
     it 'should accept order with prefix' do
-      order = [@third.uuid, @second.uuid, @first.uuid, @fourth.uuid]
+      order = [third.uuid, second.uuid, first.uuid, fourth.uuid]
       TagCategory.sort!(order.map {|o| "prefix-#{o}"})
-      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
+      expect(TagCategory.sorted.map(:uuid)).to eq(order)
     end
 
     context 'in context' do
@@ -100,21 +105,21 @@ describe TagCategory do
       end
 
       it 'should put items in order' do
-        order = [@second.uuid, @first.uuid]
+        order = [second.uuid, first.uuid]
         TagCategory.in_context(context).sort!(order)
         expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq(order)
       end
 
       it 'should remove items not in list' do
-        order = [@second.uuid]
+        order = [second.uuid]
         TagCategory.in_context(context).sort!(order)
         expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq(order)
       end
 
       it 'should not touch items not in context' do
-        order = [@third.uuid, @second.uuid]
+        order = [third.uuid, second.uuid]
         TagCategory.in_context(context).sort!(order)
-        expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq([@second.uuid])
+        expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq([second.uuid])
         expect(TagCategory.in_context(:realm => 101, :model => 'movie').count).to eq(2)
       end
     end
