@@ -1,5 +1,5 @@
 FactoryBot.define do
   factory :tag_category do
-    label 'Genre'
+    label { 'Genre' }
   end
 end
