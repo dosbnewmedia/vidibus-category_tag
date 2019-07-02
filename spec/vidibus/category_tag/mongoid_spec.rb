@@ -63,33 +63,33 @@ describe Vidibus::CategoryTag::Mongoid do
   describe '#tags=' do
     it 'should save a hash as tags with category' do
       subject.tags = {'1' => 'rugby'}
-      subject.tags_hash.should eq({'1' => ['rugby']})
+      expect(subject.tags_hash).to eq({'1' => ['rugby']})
     end
 
     it 'should save tags as array' do
       subject.tags = {'1' => 'us, br'}
-      subject.tags_hash.should eq({'1' => ['us', 'br']})
+      expect(subject.tags_hash).to eq({'1' => ['us', 'br']})
     end
 
     it 'should save tags separated by semicolon' do
       subject = Western.new
       subject.tags = {'1' => 'us; br'}
-      subject.tags_hash.should eq({'1' => ['us', 'br']})
+      expect(subject.tags_hash).to eq({'1' => ['us', 'br']})
     end
 
     it 'should not save empty tags' do
       subject.tags = {'1' => ''}
-      subject.tags_hash.should eq({})
+      expect(subject.tags_hash).to eq({})
     end
 
     it 'should accept tags as array' do
       subject.tags = {'1' => %w[us br]}
-      subject.tags_hash.should eq({'1' => ['us', 'br']})
+      expect(subject.tags_hash).to eq({'1' => ['us', 'br']})
     end
 
     it 'should add multiple keys as category' do
       subject.tags = {'1' => 'rugby', '2' => 'us, br'}
-      subject.tags_hash.should eq({'1' => ['rugby'], '2' => ['us', 'br']})
+      expect(subject.tags_hash).to eq({'1' => ['rugby'], '2' => ['us', 'br']})
     end
 
     it 'should not add an array as tag' do
@@ -105,30 +105,30 @@ describe Vidibus::CategoryTag::Mongoid do
 
     it 'should remove a trailing separator' do
       subject.tags = {'1' => 'rugby,'}
-      subject.tags_hash.should eq({'1' => ['rugby']})
+      expect(subject.tags_hash).to eq({'1' => ['rugby']})
     end
 
     it 'should override tags' do
       subject.tags = {'1' => 'rugby'}
       subject.tags = {'2' => 'us'}
-      subject.tags_hash.should eq({'2' => ['us']})
+      expect(subject.tags_hash).to eq({'2' => ['us']})
     end
   end
 
   describe '#tags' do
     it 'should be empty by default' do
-      subject.tags.should eq({})
+      expect(subject.tags).to eq({})
     end
 
     it 'should be a string' do
       subject.tags_hash = {'1' => ['us', 'br']}
-      subject.tags.should eq({'1' => 'us,br'})
+      expect(subject.tags).to eq({'1' => 'us,br'})
     end
 
     it 'should be separated by semicolon when defined' do
       subject = Western.new
       subject.tags_hash = {'1' => ['us', 'br']}
-      subject.tags.should eq({'1' => 'us;br'})
+      expect(subject.tags).to eq({'1' => 'us;br'})
     end
   end
 
@@ -141,32 +141,32 @@ describe Vidibus::CategoryTag::Mongoid do
   describe '.clean_tags_array' do
     it 'should return an array' do
       input = ['some', 'thing']
-      Movie.clean_tags_array(input).should eq(input)
+      expect(Movie.clean_tags_array(input)).to eq(input)
     end
 
     it 'should return a stripped array' do
-      Movie.clean_tags_array(['some ', ' thing']).
-        should eq(['some', 'thing'])
+      expect(Movie.clean_tags_array(['some ', ' thing'])).
+        to eq(['some', 'thing'])
     end
 
     it 'should return an array without blanks' do
-      Movie.clean_tags_array(['some', ' ', 'thing']).
-        should eq(['some', 'thing'])
+      expect(Movie.clean_tags_array(['some', ' ', 'thing'])).
+        to eq(['some', 'thing'])
     end
 
     it 'should return an array from string input separated by comma' do
-      Movie.clean_tags_array('some,thing').
-        should eq(['some', 'thing'])
+      expect(Movie.clean_tags_array('some,thing')).
+        to eq(['some', 'thing'])
     end
 
     it 'should return an array from string input separated by semicolon' do
-      Western.clean_tags_array('some;thing').
-        should eq(['some', 'thing'])
+      expect(Western.clean_tags_array('some;thing')).
+        to eq(['some', 'thing'])
     end
 
     it 'should strip string input' do
-      Movie.clean_tags_array(' some, thing ').
-        should eq(['some', 'thing'])
+      expect(Movie.clean_tags_array(' some, thing ')).
+        to eq(['some', 'thing'])
     end
   end
 end

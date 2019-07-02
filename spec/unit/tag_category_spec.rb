@@ -3,7 +3,7 @@ require 'spec_helper'
 describe TagCategory do
   describe 'validation' do
     it 'should pass with valid attributes' do
-      FactoryBot.create(:tag_category).should be_valid
+      expect(FactoryBot.create(:tag_category)).to be_valid
     end
   end
 
@@ -11,13 +11,13 @@ describe TagCategory do
     it 'sould be set from label before validation, unless provided' do
       category = FactoryBot.build(:tag_category, :label => 'Rating', :callname => nil)
       category.valid?
-      category.callname.should eq('rating')
+      expect(category.callname).to eq('rating')
     end
 
     it 'sould not be set from label unless a label is available' do
       category = FactoryBot.build(:tag_category, :label => nil, :callname => nil)
       category.valid?
-      category.callname.should be_nil
+      expect(category.callname).to be_nil
     end
   end
 
@@ -29,42 +29,42 @@ describe TagCategory do
     end
 
     it 'should use a filter to find one record' do
-      TagCategory.context({:model => 'movie'}).map(&:id).should eq([@first.id])
+      expect(TagCategory.context({:model => 'movie'}).map(&:id)).to eq([@first.id])
     end
 
     it 'should use a filter to find several records' do
-      TagCategory.context({:realm => 100}).map(&:id).should eq([@first.id, @second.id])
+      expect(TagCategory.context({:realm => 100}).map(&:id)).to eq([@first.id, @second.id])
     end
 
     it 'should use a more complex filter to find one record' do
       filter = {:realm => 100, :model => 'photo'}
-      TagCategory.context(filter).map(&:id).should eq([@second.id])
+      expect(TagCategory.context(filter).map(&:id)).to eq([@second.id])
     end
 
     it 'should find nothing' do
-      TagCategory.context({:foo => 'bar'}).count.should eq(0)
+      expect(TagCategory.context({:foo => 'bar'}).count).to eq(0)
     end
 
     it 'should find all records' do
-      TagCategory.context({}).count.should eq(3)
+      expect(TagCategory.context({}).count).to eq(3)
     end
   end
 
   describe '#tags' do
     it 'should be an empty array by default' do
-      TagCategory.new.tags.should eq([])
+      expect(TagCategory.new.tags).to eq([])
     end
 
     it 'should be made unique before validation' do
       category = FactoryBot.build(:tag_category, :tags => %w[tag1 tag2 tag1])
       category.valid?
-      category.tags.should eq(%w[tag1 tag2])
+      expect(category.tags).to eq(%w[tag1 tag2])
     end
   end
 
   describe '#context' do
     it 'should be an empty array by default' do
-      TagCategory.new.context.should eq([])
+      expect(TagCategory.new.context).to eq([])
     end
   end
 
@@ -79,19 +79,19 @@ describe TagCategory do
     it 'should put items in order' do
       order = [@third.uuid, @second.uuid, @first.uuid, @fourth.uuid]
       TagCategory.sort!(order)
-      TagCategory.sorted.map {|t| t.uuid}.should eq(order)
+      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
     end
 
     it 'should remove items not in list' do
       order = [@third.uuid, @first.uuid, @fourth.uuid]
       TagCategory.sort!(order)
-      TagCategory.sorted.map {|t| t.uuid}.should eq(order)
+      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
     end
 
     it 'should accept order with prefix' do
       order = [@third.uuid, @second.uuid, @first.uuid, @fourth.uuid]
       TagCategory.sort!(order.map {|o| "prefix-#{o}"})
-      TagCategory.sorted.map {|t| t.uuid}.should eq(order)
+      expect(TagCategory.sorted.map {|t| t.uuid}).to eq(order)
     end
 
     context 'in context' do
@@ -102,20 +102,20 @@ describe TagCategory do
       it 'should put items in order' do
         order = [@second.uuid, @first.uuid]
         TagCategory.in_context(context).sort!(order)
-        TagCategory.in_context(context).sorted.map {|t| t.uuid}.should eq(order)
+        expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq(order)
       end
 
       it 'should remove items not in list' do
         order = [@second.uuid]
         TagCategory.in_context(context).sort!(order)
-        TagCategory.in_context(context).sorted.map {|t| t.uuid}.should eq(order)
+        expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq(order)
       end
 
       it 'should not touch items not in context' do
         order = [@third.uuid, @second.uuid]
         TagCategory.in_context(context).sort!(order)
-        TagCategory.in_context(context).sorted.map {|t| t.uuid}.should eq([@second.uuid])
-        TagCategory.in_context(:realm => 101, :model => 'movie').count.should eq(2)
+        expect(TagCategory.in_context(context).sorted.map {|t| t.uuid}).to eq([@second.uuid])
+        expect(TagCategory.in_context(:realm => 101, :model => 'movie').count).to eq(2)
       end
     end
   end
