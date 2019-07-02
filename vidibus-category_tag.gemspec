@@ -16,14 +16,13 @@ Gem::Specification.new do |s|
 
   s.add_dependency 'activesupport', '>= 3.0'
   s.add_dependency 'mongoid', '>= 3'
-  s.add_dependency 'vidibus-uuid'
+  s.add_dependency 'vidibus-uuid', '1.0.0'
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'rspec'
-  s.add_development_dependency 'factory_girl', '~> 2'
+  s.add_development_dependency 'factory_bot'
   s.add_development_dependency 'simplecov'
   s.add_development_dependency 'rdoc'
-  s.add_development_dependency 'rr'
 
   s.files = Dir.glob('{lib,app,config}/**/*') + %w(LICENSE README.md Rakefile)
   s.require_path = 'lib'

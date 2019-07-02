@@ -3,19 +3,19 @@ require 'spec_helper'
 describe TagCategory do
   describe 'validation' do
     it 'should pass with valid attributes' do
-      Factory(:tag_category).should be_valid
+      FactoryBot.create(:tag_category).should be_valid
     end
   end
 
   describe '#callname' do
     it 'sould be set from label before validation, unless provided' do
-      category = Factory.build(:tag_category, :label => 'Rating', :callname => nil)
+      category = FactoryBot.build(:tag_category, :label => 'Rating', :callname => nil)
       category.valid?
       category.callname.should eq('rating')
     end
 
     it 'sould not be set from label unless a label is available' do
-      category = Factory.build(:tag_category, :label => nil, :callname => nil)
+      category = FactoryBot.build(:tag_category, :label => nil, :callname => nil)
       category.valid?
       category.callname.should be_nil
     end
@@ -23,9 +23,9 @@ describe TagCategory do
 
   describe '#context' do
     before do
-      @first = Factory(:tag_category, :context => ['realm:100', 'model:movie'])
-      @second = Factory(:tag_category, :context => ['realm:100', 'model:photo'])
-      @third = Factory(:tag_category)
+      @first = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
+      @second = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:photo'])
+      @third = FactoryBot.create(:tag_category)
     end
 
     it 'should use a filter to find one record' do
@@ -56,7 +56,7 @@ describe TagCategory do
     end
 
     it 'should be made unique before validation' do
-      category = Factory.build(:tag_category, :tags => %w[tag1 tag2 tag1])
+      category = FactoryBot.build(:tag_category, :tags => %w[tag1 tag2 tag1])
       category.valid?
       category.tags.should eq(%w[tag1 tag2])
     end
@@ -70,10 +70,10 @@ describe TagCategory do
 
   describe '.sort!' do
     before do
-      @first = Factory(:tag_category, :context => ['realm:100', 'model:movie'])
-      @second = Factory(:tag_category, :context => ['realm:100', 'model:movie'])
-      @third = Factory(:tag_category, :context => ['realm:101', 'model:movie'])
-      @fourth = Factory(:tag_category, :context => ['realm:101', 'model:movie'])
+      @first = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
+      @second = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
+      @third = FactoryBot.create(:tag_category, :context => ['realm:101', 'model:movie'])
+      @fourth = FactoryBot.create(:tag_category, :context => ['realm:101', 'model:movie'])
     end
 
     it 'should put items in order' do

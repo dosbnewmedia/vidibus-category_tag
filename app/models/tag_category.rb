@@ -15,7 +15,7 @@ class TagCategory
 
   validates :label, :callname, :presence => true
 
-  scope :sorted, order_by([:position, :asc])
+  scope :sorted, -> { order_by([:position, :asc]) }
 
   index({position: 1})
   index({context: 1, callname: 1})

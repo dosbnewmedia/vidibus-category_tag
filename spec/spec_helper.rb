@@ -6,7 +6,7 @@ end
 $:.unshift File.expand_path('../../app', __FILE__)
 
 require 'rspec'
-require 'factory_girl'
+require 'factory_bot'
 require 'vidibus-uuid'
 
 require 'vidibus-category_tag'
@@ -18,7 +18,6 @@ Mongoid.configure do |config|
 end
 
 RSpec.configure do |config|
-  config.mock_with :rr
   config.before(:each) do
     Mongoid::Sessions.default.collections.
       select {|c| c.name !~ /system/}.each(&:drop)
