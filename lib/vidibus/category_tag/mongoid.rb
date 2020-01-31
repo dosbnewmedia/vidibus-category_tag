@@ -20,19 +20,6 @@ module Vidibus
         end
       end
 
-      def tag_objects
-        tag_list = []
-        tags_hash.each do |k,v|
-          category = tag_category(uuid)
-          next unless category
-          v.each do |tag|
-            next unless tag_object = category.tag_objects.where(value: tag).first
-            tag_list.push({category: category.label, value: tag_object.value, uuid: tag_object.uuid})
-          end
-        end
-        tag_list
-      end
-
       def tags
         (tags_hash || {}).inject({}) do |categories, (key,tags)|
           categories[key] = tags.join(self.class.tags_separator)

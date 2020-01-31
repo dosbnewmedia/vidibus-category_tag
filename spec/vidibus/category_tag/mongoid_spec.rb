@@ -60,10 +60,6 @@ describe Vidibus::CategoryTag::Mongoid do
     end
   end
 
-  describe '#tag_objects' do
-    skip
-  end
-
   describe '#tags=' do
     it 'should save a hash as tags with category' do
       subject.tags = {'1' => 'rugby'}
