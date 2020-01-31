@@ -26,8 +26,8 @@ module Vidibus
           category = tag_category(uuid)
           next unless category
           v.each do |tag|
-            next unless tag_object = category.tag_objects.where(value: tag)
-            tag_list.push({category: category, value: tag_object.value, uuid: tag_object.uuid})
+            next unless tag_object = category.tag_objects.where(value: tag).first
+            tag_list.push({category: category.label, value: tag_object.value, uuid: tag_object.uuid})
           end
         end
         tag_list
