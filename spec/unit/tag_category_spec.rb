@@ -1,27 +1,55 @@
 require 'spec_helper'
 
 describe TagCategory do
+  let(:tag_category) { FactoryBot.build(:tag_category) }
+
   describe 'validation' do
     it 'should pass with valid attributes' do
-      expect(FactoryBot.create(:tag_category)).to be_valid
+      expect(tag_category).to be_valid
     end
   end
 
   describe '#callname' do
     it 'sould be set from label before validation, unless provided' do
-      category = FactoryBot.build(:tag_category, :label => 'Rating', :callname => nil)
-      category.valid?
-      expect(category.callname).to eq('rating')
+      tag_category.label = 'Rating'
+      tag_category.valid?
+      expect(tag_category.callname).to eq('rating')
     end
 
     it 'sould not be set from label unless a label is available' do
-      category = FactoryBot.build(:tag_category, :label => nil, :callname => nil)
-      category.valid?
-      expect(category.callname).to be_nil
+      tag_category.label = nil
+      tag_category.valid?
+      expect(tag_category.callname).to be_nil
     end
   end
 
   describe '#context' do
+    it 'should be an empty array by default' do
+      expect(TagCategory.new.context).to eq([])
+    end
+  end
+
+  describe '#tags' do
+    it 'should be an empty array by default' do
+      expect(TagCategory.new.tags).to eq([])
+    end
+
+    it 'should be made unique before validation' do
+      tag_category.tags = %w[tag1 tag2 tag1]
+      tag_category.valid?
+      expect(tag_category.tags).to eq(%w[tag1 tag2])
+    end
+  end
+
+  describe '#tag_objects' do
+    it 'should create new tag objects after save' do
+      tag_category.tags = %w[tag1 tag2 tag1]
+      tag_category.save!
+      expect(tag_category.tag_objects.count).to eq(2)
+    end
+  end
+
+  describe '.context' do
     before do
       @first = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:movie'])
       @second = FactoryBot.create(:tag_category, :context => ['realm:100', 'model:photo'])
@@ -47,24 +75,6 @@ describe TagCategory do
 
     it 'should find all records' do
       expect(TagCategory.context({}).count).to eq(3)
-    end
-  end
-
-  describe '#tags' do
-    it 'should be an empty array by default' do
-      expect(TagCategory.new.tags).to eq([])
-    end
-
-    it 'should be made unique before validation' do
-      category = FactoryBot.build(:tag_category, :tags => %w[tag1 tag2 tag1])
-      category.valid?
-      expect(category.tags).to eq(%w[tag1 tag2])
-    end
-  end
-
-  describe '#context' do
-    it 'should be an empty array by default' do
-      expect(TagCategory.new.context).to eq([])
     end
   end
 
