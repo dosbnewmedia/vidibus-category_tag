@@ -22,6 +22,7 @@ class TagCategory
 
   index({position: 1})
   index({context: 1, callname: 1})
+  index({'tag_objects.value': 1})
 
   class << self
     def context(context_hash)
