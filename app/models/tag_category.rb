@@ -3,6 +3,8 @@ class TagCategory
   include Mongoid::Timestamps
   include Vidibus::Uuid::Mongoid
 
+  embeds_many :tag_objects
+
   field :label
   field :callname
   field :context, type: Array, default: []
@@ -12,6 +14,7 @@ class TagCategory
   before_validation :set_callname, if: :label
   before_validation :cleanup_tags, if: :tags
   before_create :set_position
+  after_save :create_new_tag_objects
 
   validates :label, :callname, :presence => true
 
@@ -19,6 +22,7 @@ class TagCategory
 
   index({position: 1})
   index({context: 1, callname: 1})
+  index({'tag_objects.value': 1})
 
   class << self
     def context(context_hash)
@@ -62,5 +66,11 @@ class TagCategory
   def set_position
     return true if position
     self.position = TagCategory.where(:context => context).count + 1
+  end
+
+  def create_new_tag_objects
+    tags.each do |tag|
+      tag_objects.find_or_create_by(value: tag)
+    end
   end
 end

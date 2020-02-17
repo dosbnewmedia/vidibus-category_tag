@@ -10,6 +10,7 @@ require 'factory_bot'
 require 'vidibus-uuid'
 
 require 'vidibus-category_tag'
+require 'models/tag_object'
 require 'models/tag_category'
 require 'factories'
 
